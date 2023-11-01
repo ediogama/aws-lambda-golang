@@ -31,6 +31,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 	for e := range body {
 		if strings.Contains(body[e], "Body") {
 			bodyMessage = strings.Split(body[e], "=")
+			bodyMessage[1] = strings.Replace(bodyMessage[1], "+", " ", -1)
 		}
 	}
 
@@ -68,7 +69,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 
 	params := &twilioApi.CreateMessageParams{}
 	params.SetFrom("whatsapp:+14155238886")
-	params.SetBody(fmt.Sprintf("A temperatura agora em %v é %v graus U+1F916\n", city, w.Main.Temp))
+	params.SetBody(fmt.Sprintf("A temperatura agora em %s é %f graus U+1F916\n", city, w.Main.Temp))
 	params.SetTo("whatsapp:+5511948149113")
 
 	resp1, err := twilioClient.Api.CreateMessage(params)
